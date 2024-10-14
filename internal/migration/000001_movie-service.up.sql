@@ -3,12 +3,12 @@ create table if not exists movies(
     moviename varchar(350) not null,
     agelimit int not null,
     season int not null,
-    backround_image_url varchar(350) not null,
+    beckround_image_url varchar(350) not null,
     movie_url varchar(350) not null,
     studio varchar(250) not null,
     bio text not null,
     genres text[] not null,
-    languege varchar(55) not null,
+    language varchar(55) not null,
     created_at timestamp default now() not null,
     updated_at timestamp default now() not null,
     deleted_at bigint default 0 not null
@@ -19,7 +19,7 @@ create table if not exists comments(
     user_id uuid not null,
     movie_id uuid references movies(id),
     description text not null,
-    rate int not null,
+    rate int not null check ( rate >= 1 and rate <= 5 ),
     created_at timestamp default now() not null,
     updated_at timestamp default now() not null,
     deleted_at bigint default 0 not null
