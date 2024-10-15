@@ -4,17 +4,18 @@ import (
 	"context"
 	"database/sql"
 	pb "movie-service/internal/genproto/movieservice"
+	"movie-service/internal/logger"
 )
 
 type MovieStorage interface {
-	AddMovie(ctx context.Context, req *pb.AddMovieReq) (*pb.AddMovieRes,error)
-	GetMovieById(ctx context.Context, req *pb.GetMovieByIdReq ) (*pb.GetMovieByIdRes, error)
+	AddMovie(ctx context.Context, req *pb.AddMovieReq) (*pb.AddMovieRes, error)
+	GetMovieById(ctx context.Context, req *pb.GetMovieByIdReq) (*pb.GetMovieByIdRes, error)
 	UpdateMovie(ctx context.Context, req *pb.UpdateMovieReq) (*pb.UpdateMovieRes, error)
 	DeleteMovie(ctx context.Context, req *pb.DeleteMovieReq) (*pb.DeleteMovieRes, error)
 	RemoveMovie(ctx context.Context, req *pb.RemoveMovieReq) (*pb.RemoveMovieRes, error)
 	GetAllMovies(ctx context.Context, req *pb.GetAllMoviesReq) (*pb.GetAllMoviesRes, error)
 }
-	
+
 type MovieStorageImpl struct {
 	db *sql.DB
 }
@@ -24,7 +25,16 @@ func NewMovieStorage(db *sql.DB) MovieStorage {
 }
 
 func (s *MovieStorageImpl) AddMovie(ctx context.Context, req *pb.AddMovieReq) (*pb.AddMovieRes, error) {
-	return nil, nil
+	logs, err := logger.NewLogger()
+	if err != nil {
+		return nil, err
+	}
+
+	id := uuid.NewString()
+
+	query := `insert into movies (moviename,agelimit,season,beckround_image_url,movie_url,
+                  studio, bio , genres) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+	_, err := s.db.ExecContext(ctx, query)
 }
 
 func (s *MovieStorageImpl) GetMovieById(ctx context.Context, req *pb.GetMovieByIdReq) (*pb.GetMovieByIdRes, error) {
