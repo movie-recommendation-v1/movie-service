@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	"movie-service/internal/service/comment"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -122,7 +123,7 @@ type UnsafeCommentsServiceServer interface {
 	mustEmbedUnimplementedCommentsServiceServer()
 }
 
-func RegisterCommentsServiceServer(s grpc.ServiceRegistrar, srv CommentsServiceServer) {
+func RegisterCommentsServiceServer(s grpc.ServiceRegistrar, srv comment.CommentsService) {
 	s.RegisterService(&CommentsService_ServiceDesc, srv)
 }
 

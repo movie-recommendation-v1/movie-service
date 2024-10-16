@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	"movie-service/internal/service/movie"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -136,7 +137,7 @@ type UnsafeMovieServiceServer interface {
 	mustEmbedUnimplementedMovieServiceServer()
 }
 
-func RegisterMovieServiceServer(s grpc.ServiceRegistrar, srv MovieServiceServer) {
+func RegisterMovieServiceServer(s grpc.ServiceRegistrar, srv movie.MovService) {
 	s.RegisterService(&MovieService_ServiceDesc, srv)
 }
 
