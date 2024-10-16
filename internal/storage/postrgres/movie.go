@@ -3,7 +3,8 @@ package postrgres
 import (
 	"context"
 	"database/sql"
-	pb "movie-service/internal/genproto/movieservice"
+	"github.com/google/uuid"
+	pb "movie-service/genproto/movieservice"
 	"movie-service/internal/logger"
 )
 
@@ -34,11 +35,31 @@ func (s *MovieStorageImpl) AddMovie(ctx context.Context, req *pb.AddMovieReq) (*
 
 	query := `insert into movies (moviename,agelimit,season,beckround_image_url,movie_url,
                   studio, bio , genres) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
-	_, err := s.db.ExecContext(ctx, query)
+	_, err = s.db.ExecContext(ctx, query, id, req.MovieName, req.AgeLimit, req.Season, req.BackgroundImageUrl,
+		req.MovieUrl, req.Studio, req.Bio, req.Genres)
+	if err != nil {
+		logs.Error(err.Error())
+	}
+	logs.Info("Successfully added movie")
+	return &pb.AddMovieRes{Message: "Successfully added movie"}, nil
 }
 
 func (s *MovieStorageImpl) GetMovieById(ctx context.Context, req *pb.GetMovieByIdReq) (*pb.GetMovieByIdRes, error) {
-	return nil, nil
+	logs, err := logger.NewLogger()
+	if err != nil {
+		return nil, err
+	}
+	query := `select id, moviename,agelimit, season, beckround_image_url, beckround_image_url,studio,bio, genres from movies where id = $1`
+	row := s.db.QueryRowContext(ctx, query, req.Id)
+	movie := &pb.GetMovieByIdRes{}
+	err = row.Scan(
+		&movie.Res.Id,
+		&movie.Res.MovieName,
+		&movie.Res.AgeLimit,
+	)
+
+	logs.Info("Successfully retrieved movie")
+
 }
 
 func (s *MovieStorageImpl) UpdateMovie(ctx context.Context, req *pb.UpdateMovieReq) (*pb.UpdateMovieRes, error) {
